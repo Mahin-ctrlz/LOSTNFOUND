@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusFind — Lost & Found</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" onclick="showPage('home')">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 10.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l2.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </div>
+      CampusFind
+    </a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('lost'); setNavActive(this)">Lost Items</button>
+      <button class="nav-link" onclick="showPage('found'); setNavActive(this)">Found Items</button>
+      <button class="nav-link" onclick="showPage('dashboard'); setNavActive(this)">My Reports</button>
+      <button class="nav-link" onclick="showPage('admin'); setNavActive(this)">Admin</button>
+    </div>
+    <div class="nav-spacer"></div>
+    <button class="nav-btn" onclick="showPage('report-lost')">+ Report Item</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <h1>Find What Matters</h1>
+    <p>Report lost items, help others recover belongings, and keep our campus connected.</p>
+    <div class="hero-actions">
+      <button class="btn-hero btn-hero-primary" onclick="showPage('report-lost')">Report Lost Item</button>
+      <button class="btn-hero btn-hero-outline" onclick="showPage('report-found')">Report Found Item</button>
+      <button class="btn-hero btn-hero-outline" onclick="showPage('lost')">Browse Listings</button>
+    </div>
+  </div>
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item"><div class="stat-num" id="stat-lost">—</div><div class="stat-label">Lost Items</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-found">—</div><div class="stat-label">Found Items</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-returned">—</div><div class="stat-label">Successfully Returned</div></div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="page-header">
+      <div><div class="page-title">Recent Activity</div><div class="page-subtitle">Latest reports on campus</div></div>
+      <button class="btn btn-secondary" onclick="showPage('lost')">View all →</button>
+    </div>
+    <div id="home-grid"><div class="loading"><div class="loading-spinner"></div><br>Loading items…</div></div>
+  </div>
+</div>
+
+<!-- LOST ITEMS -->
+<div id="page-lost" class="page">
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="search-box">
+        <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <input type="text" placeholder="Search lost items…" oninput="handleSearch('lost', this.value)">
+      </div>
+      <select class="filter-select" onchange="handleCategoryFilter('lost', this.value)">
+        <option value="">All Categories</option>
+        <option>Electronics</option><option>Wallets</option><option>IDs</option>
+        <option>Keys</option><option>Books</option><option>Bags</option>
+        <option>Clothing</option><option>Accessories</option><option>Other</option>
+      </select>
+    </div>
+  </div>
+  <div class="container">
+    <div class="page-header">
+      <div><div class="page-title">Lost Items</div><div class="page-subtitle" id="lost-count"> </div></div>
+      <button class="btn btn-primary" onclick="showPage('report-lost')">+ Report Lost</button>
+    </div>
+    <div id="lost-grid"><div class="loading"><div class="loading-spinner"></div><br>Loading…</div></div>
+  </div>
+</div>
+
+<!-- FOUND ITEMS -->
+<div id="page-found" class="page">
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="search-box">
+        <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <input type="text" placeholder="Search found items…" oninput="handleSearch('found', this.value)">
+      </div>
+      <select class="filter-select" onchange="handleCategoryFilter('found', this.value)">
+        <option value="">All Categories</option>
+        <option>Electronics</option><option>Wallets</option><option>IDs</option>
+        <option>Keys</option><option>Books</option><option>Bags</option>
+        <option>Clothing</option><option>Accessories</option><option>Other</option>
+      </select>
+    </div>
+  </div>
+  <div class="container">
+    <div class="page-header">
+      <div><div class="page-title">Found Items</div><div class="page-subtitle" id="found-count"> </div></div>
+      <button class="btn btn-primary" onclick="showPage('report-found')">+ Report Found</button>
+    </div>
+    <div id="found-grid"><div class="loading"><div class="loading-spinner"></div><br>Loading…</div></div>
+  </div>
+</div>
+
+<!-- REPORT LOST -->
+<div id="page-report-lost" class="page">
+  <div class="container">
+    <div class="page-header">
+      <div><div class="page-title">Report a Lost Item</div><div class="page-subtitle">Fill in the details to help others identify your item</div></div>
+      <button class="btn btn-secondary" onclick="showPage('lost')">← Back</button>
+    </div>
+    <div class="form-card">
+      <div class="form-section-title">Item Details</div>
+      <div class="form-group">
+        <label class="form-label">Item Name <span>*</span></label>
+        <input class="form-input" type="text" placeholder="e.g. Black HP Laptop" id="lost-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category <span>*</span></label>
+        <div class="category-grid" id="lost-cat-grid">
+          <div class="category-chip" onclick="selectCat(this,'lost-cat')">📱 Electronics</div>
+          <div class="category-chip" onclick="selectCat(this,'lost-cat')">👛 Wallets</div>
+          <div class="category-chip" onclick="selectCat(this,'lost-cat')">🪪 IDs</div>
+          <div class="category-chip" onclick="selectCat(this,'lost-cat')">🔑 Keys</div>
+          <div class="category-chip" onclick="selectCat(this,'lost-cat')">📚 Books</div>
+          <div class="category-chip" onclick="selectCat(this,'lost-cat')">🎒 Bags</div>
+          <div class="category-chip" onclick="selectCat(this,'lost-cat')">👕 Clothing</div>
+          <div class="category-chip" onclick="selectCat(this,'lost-cat')">💍 Accessories</div>
+          <div class="category-chip" onclick="selectCat(this,'lost-cat')">📦 Other</div>
+        </div>
+        <input type="hidden" id="lost-cat">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description <span>*</span></label>
+        <textarea class="form-input" rows="4" placeholder="Color, brand, size, any distinguishing marks…" style="resize:vertical" id="lost-desc"></textarea>
+      </div>
+      <div class="form-section-title" style="margin-top:1.5rem">Location & Time</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Last Seen Location <span>*</span></label>
+          <select class="form-input" id="lost-location">
+            <option value="">Select location…</option>
+            <option>Library</option><option>Cafeteria</option><option>Gymnasium</option>
+            <option>Engineering Block</option><option>Arts Building</option>
+            <option>Science Block</option><option>Student Union</option><option>Parking Lot</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date Lost <span>*</span></label>
+          <input class="form-input" type="date" id="lost-date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Email <span>*</span></label>
+        <input class="form-input" type="email" placeholder="your.name@university.edu" id="lost-email">
+      </div>
+      <div class="form-submit-row">
+        <button class="btn btn-secondary" onclick="showPage('lost')">Cancel</button>
+        <button class="btn btn-primary" id="lost-submit-btn" onclick="submitReport('lost')">Submit Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT FOUND -->
+<div id="page-report-found" class="page">
+  <div class="container">
+    <div class="page-header">
+      <div><div class="page-title">Report a Found Item</div><div class="page-subtitle">Help someone reunite with their belongings</div></div>
+      <button class="btn btn-secondary" onclick="showPage('found')">← Back</button>
+    </div>
+    <div class="form-card">
+      <div class="form-section-title">Item Details</div>
+      <div class="form-group">
+        <label class="form-label">Item Name <span>*</span></label>
+        <input class="form-input" type="text" placeholder="e.g. Silver Water Bottle" id="found-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category <span>*</span></label>
+        <div class="category-grid" id="found-cat-grid">
+          <div class="category-chip" onclick="selectCat(this,'found-cat')">📱 Electronics</div>
+          <div class="category-chip" onclick="selectCat(this,'found-cat')">👛 Wallets</div>
+          <div class="category-chip" onclick="selectCat(this,'found-cat')">🪪 IDs</div>
+          <div class="category-chip" onclick="selectCat(this,'found-cat')">🔑 Keys</div>
+          <div class="category-chip" onclick="selectCat(this,'found-cat')">📚 Books</div>
+          <div class="category-chip" onclick="selectCat(this,'found-cat')">🎒 Bags</div>
+          <div class="category-chip" onclick="selectCat(this,'found-cat')">👕 Clothing</div>
+          <div class="category-chip" onclick="selectCat(this,'found-cat')">💍 Accessories</div>
+          <div class="category-chip" onclick="selectCat(this,'found-cat')">📦 Other</div>
+        </div>
+        <input type="hidden" id="found-cat">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description <span>*</span></label>
+        <textarea class="form-input" rows="4" placeholder="Describe the item in detail…" style="resize:vertical" id="found-desc"></textarea>
+      </div>
+      <div class="form-section-title" style="margin-top:1.5rem">Location & Time</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Found Location <span>*</span></label>
+          <select class="form-input" id="found-location">
+            <option value="">Select location…</option>
+            <option>Library</option><option>Cafeteria</option><option>Gymnasium</option>
+            <option>Engineering Block</option><option>Arts Building</option>
+            <option>Science Block</option><option>Student Union</option><option>Parking Lot</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date Found <span>*</span></label>
+          <input class="form-input" type="date" id="found-date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Email <span>*</span></label>
+        <input class="form-input" type="email" placeholder="your.name@university.edu" id="found-email">
+      </div>
+      <div class="form-submit-row">
+        <button class="btn btn-secondary" onclick="showPage('found')">Cancel</button>
+        <button class="btn btn-primary" id="found-submit-btn" onclick="submitReport('found')">Submit Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page">
+  <div class="container">
+    <div class="page-header">
+      <div><div class="page-title">My Reports</div><div class="page-subtitle">Manage your lost and found submissions</div></div>
+    </div>
+    <div style="background:var(--accent-light);border:1px solid #bfdbfe;border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:14px;color:#1e40af;">
+      Enter your email to view and manage your reports.
+      <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
+        <input class="form-input" type="email" placeholder="your.name@university.edu" id="dash-email" style="max-width:300px;margin:0">
+        <button class="btn btn-primary" onclick="loadDashboard()">Load My Reports</button>
+      </div>
+    </div>
+    <div class="dash-stats">
+      <div class="dash-stat"><div class="dash-stat-num" id="my-lost-count">—</div><div class="dash-stat-label">Lost Reports</div></div>
+      <div class="dash-stat"><div class="dash-stat-num" id="my-found-count">—</div><div class="dash-stat-label">Found Reports</div></div>
+      <div class="dash-stat"><div class="dash-stat-num" id="my-claims-count">—</div><div class="dash-stat-label">Claims Submitted</div></div>
+      <div class="dash-stat"><div class="dash-stat-num" id="my-returned-count">—</div><div class="dash-stat-label">Returned</div></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(this,'tab-lost')">Lost Reports</button>
+      <button class="tab" onclick="switchTab(this,'tab-found')">Found Reports</button>
+    </div>
+    <div id="tab-lost"><div id="dash-lost-rows"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Enter your email above</div><div class="empty-text">to load your reports</div></div></div></div>
+    <div id="tab-found" style="display:none"><div id="dash-found-rows"></div></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="page-admin" class="page">
+  <div class="container">
+    <div class="page-header">
+      <div><div class="page-title">Admin Panel</div><div class="page-subtitle">Moderate reports and verify claims</div></div>
+      <button class="btn btn-primary" onclick="loadAdmin()">↻ Refresh</button>
+    </div>
+    <div class="dash-stats">
+      <div class="dash-stat"><div class="dash-stat-num" id="admin-total">—</div><div class="dash-stat-label">Total Items</div></div>
+      <div class="dash-stat"><div class="dash-stat-num" id="admin-lost">—</div><div class="dash-stat-label">Lost</div></div>
+      <div class="dash-stat"><div class="dash-stat-num" id="admin-found">—</div><div class="dash-stat-label">Found</div></div>
+      <div class="dash-stat"><div class="dash-stat-num" id="admin-returned">—</div><div class="dash-stat-label">Returned</div></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(this,'admin-tab-reports')">All Reports</button>
+      <button class="tab" onclick="switchTab(this,'admin-tab-claims')">Claims</button>
+    </div>
+    <div id="admin-tab-reports">
+      <table class="admin-table">
+        <thead><tr><th>Item</th><th>Type</th><th>Category</th><th>Location</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="admin-items-body"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--gray-400)">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <div id="admin-tab-claims" style="display:none">
+      <table class="admin-table">
+        <thead><tr><th>Item</th><th>Claimant</th><th>Submitted</th><th>Answer</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="admin-claims-body"><tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--gray-400)">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ITEM DETAIL MODAL -->
+<div class="overlay" id="item-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-img" id="modal-img"></div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span id="modal-type-badge" class="badge"></span>
+          <span id="modal-cat-badge" class="badge badge-category"></span>
+        </div>
+        <div class="modal-title" id="modal-title"></div>
+        <div style="font-size:13px;color:var(--gray-500);margin-top:3px" id="modal-date"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div><div class="detail-label">Location</div><div class="detail-value" id="modal-location"></div></div>
+        <div><div class="detail-label">Reported by</div><div class="detail-value" id="modal-reporter"></div></div>
+        <div><div class="detail-label">Status</div><div class="detail-value" id="modal-status"></div></div>
+        <div><div class="detail-label">Item ID</div><div class="detail-value" id="modal-id"></div></div>
+      </div>
+      <div><div class="detail-label" style="margin-bottom:8px">Description</div><p id="modal-desc" style="font-size:14px;color:var(--gray-700);line-height:1.65"></p></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="modal-action-btn" onclick="handleModalAction()"></button>
+      <button class="btn btn-secondary" onclick="closeModal()" style="margin-left:auto">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLAIM MODAL -->
+<div class="overlay" id="claim-modal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <div style="flex:1">
+        <div class="modal-title">Claim This Item</div>
+        <div style="font-size:13px;color:var(--gray-500);margin-top:3px">Prove ownership with a description of a unique feature</div>
+      </div>
+      <button class="modal-close" onclick="closeClaimModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Unique identifying feature <span>*</span></label>
+        <textarea class="form-input" rows="3" placeholder="e.g. There's a mountain sticker on the lid and my initials written inside…" id="claim-answer"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your university email <span>*</span></label>
+        <input class="form-input" type="email" placeholder="your.name@university.edu" id="claim-email">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="claim-submit-btn" onclick="submitClaim()">Submit Claim</button>
+      <button class="btn btn-secondary" onclick="closeClaimModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
