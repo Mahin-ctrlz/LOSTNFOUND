@@ -512,7 +512,56 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
   .login-form-wrap { max-width: 100%; }
 }
 
-/* ── NAV USER / LOGOUT ── */
+/* ── DARK MODE TOGGLE ── */
+.dark-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--gray-100);
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  flex-shrink: 0;
+}
+.dark-toggle:hover {
+  background: var(--gray-200);
+  transform: rotate(15deg);
+}
+
+/* ── FIX: elements that were hardcoded white/light ── */
+.modal { background: var(--surface); border-radius: 14px; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.modal-actions { display: flex; gap: 10px; flex-wrap: wrap; padding: 1rem 1.5rem; border-top: 1px solid var(--border); background: var(--surface-2); border-radius: 0 0 14px 14px; }
+.form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow); max-width: 640px; margin: 0 auto; }
+.form-input { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; color: var(--gray-900); background: var(--surface); outline: none; transition: border-color 0.15s; font-family: inherit; }
+.category-chip { padding: 8px 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; color: var(--gray-600); cursor: pointer; text-align: center; transition: all 0.15s; background: var(--surface); }
+.dash-stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+.tab.active { background: var(--surface); color: var(--gray-900); box-shadow: var(--shadow); }
+.report-row { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; transition: all 0.15s; }
+.admin-table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+.admin-table th { background: var(--surface-2); padding: 10px 14px; font-size: 12px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; text-align: left; border-bottom: 1px solid var(--border); }
+.admin-table tr:hover td { background: var(--surface-2); }
+.btn-sm { padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: var(--radius-sm); cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--gray-700); transition: all 0.15s; }
+
+/* ── LOGIN dark mode ── */
+html.dark .login-left { background: linear-gradient(160deg, #0f1e33 0%, #1a2f4a 100%); }
+html.dark .login-right { background: #0f172a; border-left-color: #334155; }
+html.dark .login-form-title { color: #f1f5f9; }
+html.dark .login-form-sub { color: #94a3b8; }
+html.dark .shad-label { color: #e2e8f0; }
+html.dark .shad-input { background: #1e293b; border-color: #334155; color: #f1f5f9; }
+html.dark .shad-input::placeholder { color: #64748b; }
+html.dark .shad-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
+html.dark .shad-btn { background: #2563eb; }
+html.dark .shad-btn:hover { background: #1d4ed8; }
+html.dark .shad-hint { color: #64748b; }
+html.dark .login-left-bottom { color: rgba(255,255,255,0.4); }
+html.dark .login-pill { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.12); }
+html.dark .login-form-footer { color: #64748b; border-top-color: #1e293b; }
+
 .nav-user { font-size: 13px; color: var(--gray-500); font-weight: 500; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nav-logout { background: none; border: 1px solid var(--border); color: var(--gray-500); padding: 5px 10px; border-radius: var(--radius-sm); font-size: 14px; cursor: pointer; transition: all 0.15s; }
 .nav-logout:hover { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }

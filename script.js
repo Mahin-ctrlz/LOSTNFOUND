@@ -5,6 +5,29 @@ const STORAGE_BUCKET = 'item-photos';
 
 const EMOJIS = { Electronics:'📱', Wallets:'👛', IDs:'🪪', Keys:'🔑', Books:'📚', Bags:'🎒', Clothing:'👕', Accessories:'💍', Other:'📦' };
 
+// ─────────────────────────────────────────────
+// DARK MODE
+// ─────────────────────────────────────────────
+function applyDark(dark) {
+  document.documentElement.classList.toggle('dark', dark);
+  const icon = document.getElementById('dark-toggle-icon');
+  if (icon) icon.textContent = dark ? '☀️' : '🌙';
+}
+
+function toggleDark() {
+  const isDark = document.documentElement.classList.contains('dark');
+  const next = !isDark;
+  localStorage.setItem('campusfind_theme', next ? 'dark' : 'light');
+  applyDark(next);
+}
+
+// Apply saved theme immediately on load (before DOMContentLoaded to avoid flash)
+(function() {
+  const saved = localStorage.getItem('campusfind_theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyDark(saved === 'dark' || (!saved && prefersDark));
+})();
+
 let currentModalItem = null;
 let searchTimers = {};
 let currentUser = null;   // holds the logged-in email
