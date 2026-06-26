@@ -210,6 +210,24 @@
         <label class="form-label">Description <span>*</span></label>
         <textarea class="form-input" rows="4" placeholder="Color, brand, size, any distinguishing marks…" style="resize:vertical" id="lost-desc"></textarea>
       </div>
+
+      <!-- PHOTO UPLOAD -->
+      <div class="form-group">
+        <label class="form-label">Photo <span class="form-hint-inline">(optional but recommended)</span></label>
+        <div class="upload-area" id="lost-upload-area" onclick="document.getElementById('lost-photo-input').click()">
+          <input type="file" id="lost-photo-input" accept="image/*" style="display:none" onchange="handlePhotoSelect(event,'lost')">
+          <div id="lost-upload-placeholder">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Click to upload a photo</div>
+            <div class="upload-hint">JPG, PNG, WEBP · max 5 MB</div>
+          </div>
+          <div id="lost-upload-preview" style="display:none">
+            <img id="lost-upload-preview-img" alt="Preview" class="upload-preview-img">
+            <button class="upload-remove-btn" onclick="removePhoto(event,'lost')">✕ Remove photo</button>
+          </div>
+        </div>
+      </div>
+
       <div class="form-section-title" style="margin-top:1.5rem">Location & Time</div>
       <div class="form-row">
         <div class="form-group">
@@ -275,16 +293,16 @@
       <!-- PHOTO UPLOAD (new) -->
       <div class="form-group">
         <label class="form-label">Photo <span class="form-hint-inline">(optional but recommended)</span></label>
-        <div class="upload-area" id="upload-area" onclick="document.getElementById('found-photo-input').click()">
-          <input type="file" id="found-photo-input" accept="image/*" style="display:none" onchange="handlePhotoSelect(event)">
-          <div id="upload-placeholder">
+        <div class="upload-area" id="found-upload-area" onclick="document.getElementById('found-photo-input').click()">
+          <input type="file" id="found-photo-input" accept="image/*" style="display:none" onchange="handlePhotoSelect(event,'found')">
+          <div id="found-upload-placeholder">
             <div class="upload-icon">📷</div>
             <div class="upload-text">Click to upload a photo</div>
             <div class="upload-hint">JPG, PNG, WEBP · max 5 MB</div>
           </div>
-          <div id="upload-preview" style="display:none">
-            <img id="upload-preview-img" alt="Preview" class="upload-preview-img">
-            <button class="upload-remove-btn" onclick="removePhoto(event)">✕ Remove photo</button>
+          <div id="found-upload-preview" style="display:none">
+            <img id="found-upload-preview-img" alt="Preview" class="upload-preview-img">
+            <button class="upload-remove-btn" onclick="removePhoto(event,'found')">✕ Remove photo</button>
           </div>
         </div>
       </div>

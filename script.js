@@ -8,7 +8,8 @@ const EMOJIS = { Electronics:'📱', Wallets:'👛', IDs:'🪪', Keys:'🔑', Bo
 let currentModalItem = null;
 let searchTimers = {};
 let currentUser = null;   // holds the logged-in email
-let selectedPhotoFile = null;  // holds the chosen photo File object
+let selectedPhotoFile = null;  // legacy ref, kept for compatibility
+let photoFiles = { lost: null, found: null };
 
 // ─────────────────────────────────────────────
 // SESSION helpers
@@ -143,29 +144,31 @@ async function sb(path, options = {}) {
 // ─────────────────────────────────────────────
 // PHOTO UPLOAD helpers
 // ─────────────────────────────────────────────
-function handlePhotoSelect(event) {
+function handlePhotoSelect(event, type) {
   const file = event.target.files[0];
   if (!file) return;
   if (file.size > 5 * 1024 * 1024) {
     showToast('⚠️ Photo must be smaller than 5 MB'); return;
   }
-  selectedPhotoFile = file;
+  photoFiles[type] = file;
+  selectedPhotoFile = file; // keep legacy ref
   const reader = new FileReader();
   reader.onload = e => {
-    document.getElementById('upload-placeholder').style.display = 'none';
-    document.getElementById('upload-preview').style.display = 'block';
-    document.getElementById('upload-preview-img').src = e.target.result;
+    document.getElementById(type + '-upload-placeholder').style.display = 'none';
+    document.getElementById(type + '-upload-preview').style.display = 'block';
+    document.getElementById(type + '-upload-preview-img').src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-function removePhoto(event) {
+function removePhoto(event, type) {
   event.stopPropagation();
+  photoFiles[type] = null;
   selectedPhotoFile = null;
-  document.getElementById('found-photo-input').value = '';
-  document.getElementById('upload-placeholder').style.display = 'block';
-  document.getElementById('upload-preview').style.display = 'none';
-  document.getElementById('upload-preview-img').src = '';
+  document.getElementById(type + '-photo-input').value = '';
+  document.getElementById(type + '-upload-placeholder').style.display = 'block';
+  document.getElementById(type + '-upload-preview').style.display = 'none';
+  document.getElementById(type + '-upload-preview-img').src = '';
 }
 
 async function uploadPhoto(file) {
@@ -404,11 +407,11 @@ async function submitReport(type) {
   try {
     let photo_url = null;
 
-    // Upload photo if one was selected (only for "found" reports)
-    if (type === 'found' && selectedPhotoFile) {
+    // Upload photo if one was selected (both lost and found support photos)
+    if (photoFiles[type]) {
       btn.textContent = 'Uploading photo…';
       try {
-        photo_url = await uploadPhoto(selectedPhotoFile);
+        photo_url = await uploadPhoto(photoFiles[type]);
       } catch(photoErr) {
         // Photo upload failed — warn but continue without photo
         showToast('⚠️ Photo upload failed, submitting without photo');
@@ -429,13 +432,17 @@ async function submitReport(type) {
     document.getElementById(type + '-location').value = '';
     document.getElementById(type + '-cat').value = '';
     document.getElementById(type + '-cat-grid').querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
-    if (type === 'found') {
-      selectedPhotoFile = null;
-      document.getElementById('found-photo-input').value = '';
-      document.getElementById('upload-placeholder').style.display = 'block';
-      document.getElementById('upload-preview').style.display = 'none';
-      document.getElementById('upload-preview-img').src = '';
-    }
+    // Reset photo upload UI for both types
+    photoFiles[type] = null;
+    selectedPhotoFile = null;
+    const photoInput = document.getElementById(type + '-photo-input');
+    if (photoInput) photoInput.value = '';
+    const placeholder = document.getElementById(type + '-upload-placeholder');
+    const preview = document.getElementById(type + '-upload-preview');
+    const previewImg = document.getElementById(type + '-upload-preview-img');
+    if (placeholder) placeholder.style.display = 'block';
+    if (preview) preview.style.display = 'none';
+    if (previewImg) previewImg.src = '';
 
     showToast('🎉 Report submitted successfully!');
     setTimeout(() => showPage(type), 600);
