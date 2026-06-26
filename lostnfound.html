@@ -8,6 +8,78 @@
 </head>
 <body>
 
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+
+  <!-- LEFT: brand + copy panel -->
+  <div class="login-left">
+    <div class="login-left-top">
+      <div class="login-brand">
+        <div class="login-brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 10.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l2.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <span class="login-brand-name">CampusFind</span>
+      </div>
+    </div>
+
+    <div class="login-left-body">
+      <h1 class="login-left-headline">Your campus<br><span>lost &amp; found</span>,<br>reimagined.</h1>
+      <p class="login-left-sub">Report what you've lost, help return what you've found. Keeping our campus connected, one item at a time.</p>
+      <div class="login-pills">
+        <span class="login-pill">📱 Electronics</span>
+        <span class="login-pill">🔑 Keys</span>
+        <span class="login-pill">🎒 Bags</span>
+        <span class="login-pill">🪪 IDs</span>
+        <span class="login-pill">📚 Books</span>
+      </div>
+    </div>
+
+    <div class="login-left-bottom">
+      © CampusFind · University Lost &amp; Found Portal
+    </div>
+  </div>
+
+  <!-- RIGHT: form panel -->
+  <div class="login-right">
+    <div class="login-form-wrap">
+      <div class="login-form-header">
+        <h2 class="login-form-title">Sign in</h2>
+        <p class="login-form-sub">Enter your university email — no password required.</p>
+      </div>
+
+      <div style="margin-bottom:1.25rem">
+        <label class="shad-label" for="login-email">University email</label>
+        <input
+          class="shad-input"
+          type="email"
+          id="login-email"
+          placeholder="yourname@university.edu"
+          autocomplete="email"
+        >
+        <p class="shad-hint">Use your official .edu or university email address</p>
+      </div>
+
+      <div id="login-error" class="shad-error" style="display:none">
+        <svg class="shad-error-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="login-error-msg"></span>
+      </div>
+
+      <button class="shad-btn" id="login-btn" onclick="handleLogin()">
+        Continue
+        <svg style="display:inline;margin-left:6px;vertical-align:-2px" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+
+      <div class="login-form-footer">
+        🔒 No password needed. Your email is only used to link your reports.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- APP (hidden until login) -->
+<div id="app" style="display:none">
+
 <nav>
   <div class="nav-inner">
     <a class="logo" onclick="showPage('home')">
@@ -20,44 +92,24 @@
       <button class="nav-link" onclick="showPage('lost'); setNavActive(this)">Lost Items</button>
       <button class="nav-link" onclick="showPage('found'); setNavActive(this)">Found Items</button>
       <button class="nav-link" onclick="showPage('dashboard'); setNavActive(this)">My Reports</button>
-      <button class="nav-link" id="nav-admin-link" style="display:none" onclick="showPage('admin'); setNavActive(this)">Admin</button>
+      <button class="nav-link" onclick="showPage('admin'); setNavActive(this)">Admin</button>
     </div>
     <div class="nav-spacer"></div>
-
-    <!-- Auth-aware nav block (toggled by JS) -->
-    <div class="nav-auth" id="nav-auth-signedout" style="display:none">
-      <button class="nav-btn nav-btn-ghost" onclick="openLoginModal()">Login</button>
-      <button class="nav-btn" onclick="guardReport('lost')">+ Report Item</button>
-    </div>
-    <div class="nav-auth" id="nav-auth-signedin" style="display:none">
-      <span class="nav-user" id="nav-user-email" title=""></span>
-      <button class="nav-btn nav-btn-ghost" onclick="doLogout()">Logout</button>
-      <button class="nav-btn" onclick="showPage('report-lost')">+ Report Item</button>
-    </div>
+    <div class="nav-user" id="nav-user-badge"></div>
+    <button class="nav-btn" onclick="showPage('report-lost')">+ Report Item</button>
+    <button class="nav-logout" onclick="handleLogout()" title="Sign out">↩</button>
   </div>
 </nav>
 
 <!-- HOME -->
 <div id="page-home" class="page active">
   <div class="hero">
-    <canvas class="particle-canvas" id="particle-canvas"></canvas>
-    <div class="accent-lines">
-      <div class="hline"></div>
-      <div class="hline"></div>
-      <div class="hline"></div>
-      <div class="vline"></div>
-      <div class="vline"></div>
-      <div class="vline"></div>
-    </div>
-    <div class="hero-content">
-      <div class="kicker">Campus Lost & Found</div>
-      <h1>Find What Matters</h1>
-      <p>Report lost items, help others recover belongings, and keep our campus connected.</p>
-      <div class="hero-actions">
-        <button class="btn-hero btn-hero-primary" onclick="guardReport('lost')">Report Lost Item</button>
-        <button class="btn-hero btn-hero-outline" onclick="guardReport('found')">Report Found Item</button>
-        <button class="btn-hero btn-hero-outline" onclick="showPage('lost')">Browse Listings</button>
-      </div>
+    <h1>Find What Matters</h1>
+    <p>Report lost items, help others recover belongings, and keep our campus connected.</p>
+    <div class="hero-actions">
+      <button class="btn-hero btn-hero-primary" onclick="showPage('report-lost')">Report Lost Item</button>
+      <button class="btn-hero btn-hero-outline" onclick="showPage('report-found')">Report Found Item</button>
+      <button class="btn-hero btn-hero-outline" onclick="showPage('lost')">Browse Listings</button>
     </div>
   </div>
   <div class="stats-bar">
@@ -74,11 +126,6 @@
     </div>
     <div id="home-grid"><div class="loading"><div class="loading-spinner"></div><br>Loading items…</div></div>
   </div>
-  <footer class="site-footer">
-    <div class="footer-tag">Designed for focus</div>
-    <div class="footer-heading">A quieter way to find what's lost.</div>
-    <p class="footer-desc">Report an item in seconds, browse verified listings, and reunite belongings with their owners — all in one calm, distraction-free space.</p>
-  </footer>
 </div>
 
 <!-- LOST ITEMS -->
@@ -100,7 +147,7 @@
   <div class="container">
     <div class="page-header">
       <div><div class="page-title">Lost Items</div><div class="page-subtitle" id="lost-count"> </div></div>
-      <button class="btn btn-primary" onclick="guardReport('lost')">+ Report Lost</button>
+      <button class="btn btn-primary" onclick="showPage('report-lost')">+ Report Lost</button>
     </div>
     <div id="lost-grid"><div class="loading"><div class="loading-spinner"></div><br>Loading…</div></div>
   </div>
@@ -125,7 +172,7 @@
   <div class="container">
     <div class="page-header">
       <div><div class="page-title">Found Items</div><div class="page-subtitle" id="found-count"> </div></div>
-      <button class="btn btn-primary" onclick="guardReport('found')">+ Report Found</button>
+      <button class="btn btn-primary" onclick="showPage('report-found')">+ Report Found</button>
     </div>
     <div id="found-grid"><div class="loading"><div class="loading-spinner"></div><br>Loading…</div></div>
   </div>
@@ -139,7 +186,6 @@
       <button class="btn btn-secondary" onclick="showPage('lost')">← Back</button>
     </div>
     <div class="form-card">
-      <div class="form-note" id="lost-auth-note">Reporting as <strong>—</strong></div>
       <div class="form-section-title">Item Details</div>
       <div class="form-group">
         <label class="form-label">Item Name <span>*</span></label>
@@ -165,17 +211,21 @@
         <textarea class="form-input" rows="4" placeholder="Color, brand, size, any distinguishing marks…" style="resize:vertical" id="lost-desc"></textarea>
       </div>
 
-      <!-- PHOTO SECTION -->
+      <!-- PHOTO UPLOAD -->
       <div class="form-group">
-        <label class="form-label">Photo <span class="opt">(optional)</span></label>
-        <label class="upload-area photo-upload" for="lost-photo-input">
-          <div id="lost-photo-preview" class="photo-preview-empty">
-            <div style="font-size:28px">📷</div>
-            <div style="font-size:13px;color:var(--gray-500);margin-top:6px">Click to upload a photo</div>
+        <label class="form-label">Photo <span class="form-hint-inline">(optional but recommended)</span></label>
+        <div class="upload-area" id="lost-upload-area" onclick="document.getElementById('lost-photo-input').click()">
+          <input type="file" id="lost-photo-input" accept="image/*" style="display:none" onchange="handlePhotoSelect(event,'lost')">
+          <div id="lost-upload-placeholder">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Click to upload a photo</div>
+            <div class="upload-hint">JPG, PNG, WEBP · max 5 MB</div>
           </div>
-          <input type="file" accept="image/*" id="lost-photo-input" style="display:none" onchange="handlePhotoPick('lost', event)">
-        </label>
-        <input class="form-input" type="url" placeholder="…or paste an image URL instead" id="lost-photo-url" oninput="handlePhotoUrl('lost', this.value)" style="margin-top:8px">
+          <div id="lost-upload-preview" style="display:none">
+            <img id="lost-upload-preview-img" alt="Preview" class="upload-preview-img">
+            <button class="upload-remove-btn" onclick="removePhoto(event,'lost')">✕ Remove photo</button>
+          </div>
+        </div>
       </div>
 
       <div class="form-section-title" style="margin-top:1.5rem">Location & Time</div>
@@ -194,6 +244,11 @@
           <input class="form-input" type="date" id="lost-date">
         </div>
       </div>
+      <div class="form-group">
+        <label class="form-label">Your Email</label>
+        <input class="form-input" type="email" id="lost-email" readonly style="background:var(--gray-100);color:var(--gray-500);cursor:not-allowed">
+        <div class="form-hint">Filled automatically from your login</div>
+      </div>
       <div class="form-submit-row">
         <button class="btn btn-secondary" onclick="showPage('lost')">Cancel</button>
         <button class="btn btn-primary" id="lost-submit-btn" onclick="submitReport('lost')">Submit Report</button>
@@ -210,7 +265,6 @@
       <button class="btn btn-secondary" onclick="showPage('found')">← Back</button>
     </div>
     <div class="form-card">
-      <div class="form-note" id="found-auth-note">Reporting as <strong>—</strong></div>
       <div class="form-section-title">Item Details</div>
       <div class="form-group">
         <label class="form-label">Item Name <span>*</span></label>
@@ -236,17 +290,21 @@
         <textarea class="form-input" rows="4" placeholder="Describe the item in detail…" style="resize:vertical" id="found-desc"></textarea>
       </div>
 
-      <!-- PHOTO SECTION -->
+      <!-- PHOTO UPLOAD (new) -->
       <div class="form-group">
-        <label class="form-label">Photo <span class="opt">(optional)</span></label>
-        <label class="upload-area photo-upload" for="found-photo-input">
-          <div id="found-photo-preview" class="photo-preview-empty">
-            <div style="font-size:28px">📷</div>
-            <div style="font-size:13px;color:var(--gray-500);margin-top:6px">Click to upload a photo</div>
+        <label class="form-label">Photo <span class="form-hint-inline">(optional but recommended)</span></label>
+        <div class="upload-area" id="found-upload-area" onclick="document.getElementById('found-photo-input').click()">
+          <input type="file" id="found-photo-input" accept="image/*" style="display:none" onchange="handlePhotoSelect(event,'found')">
+          <div id="found-upload-placeholder">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Click to upload a photo</div>
+            <div class="upload-hint">JPG, PNG, WEBP · max 5 MB</div>
           </div>
-          <input type="file" accept="image/*" id="found-photo-input" style="display:none" onchange="handlePhotoPick('found', event)">
-        </label>
-        <input class="form-input" type="url" placeholder="…or paste an image URL instead" id="found-photo-url" oninput="handlePhotoUrl('found', this.value)" style="margin-top:8px">
+          <div id="found-upload-preview" style="display:none">
+            <img id="found-upload-preview-img" alt="Preview" class="upload-preview-img">
+            <button class="upload-remove-btn" onclick="removePhoto(event,'found')">✕ Remove photo</button>
+          </div>
+        </div>
       </div>
 
       <div class="form-section-title" style="margin-top:1.5rem">Location & Time</div>
@@ -265,6 +323,11 @@
           <input class="form-input" type="date" id="found-date">
         </div>
       </div>
+      <div class="form-group">
+        <label class="form-label">Your Email</label>
+        <input class="form-input" type="email" id="found-email" readonly style="background:var(--gray-100);color:var(--gray-500);cursor:not-allowed">
+        <div class="form-hint">Filled automatically from your login</div>
+      </div>
       <div class="form-submit-row">
         <button class="btn btn-secondary" onclick="showPage('found')">Cancel</button>
         <button class="btn btn-primary" id="found-submit-btn" onclick="submitReport('found')">Submit Report</button>
@@ -278,13 +341,7 @@
   <div class="container">
     <div class="page-header">
       <div><div class="page-title">My Reports</div><div class="page-subtitle">Manage your lost and found submissions</div></div>
-    </div>
-    <div class="info-box">
-      <span id="dash-prompt">Enter your email to view and manage your reports.</span>
-      <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
-        <input class="form-input" type="email" placeholder="your.name@university.edu" id="dash-email" style="max-width:300px;margin:0">
-        <button class="btn btn-primary" onclick="loadDashboard()">Load My Reports</button>
-      </div>
+      <button class="btn btn-primary" onclick="loadDashboard()">↻ Refresh</button>
     </div>
     <div class="dash-stats">
       <div class="dash-stat"><div class="dash-stat-num" id="my-lost-count">—</div><div class="dash-stat-label">Lost Reports</div></div>
@@ -296,7 +353,7 @@
       <button class="tab active" onclick="switchTab(this,'tab-lost')">Lost Reports</button>
       <button class="tab" onclick="switchTab(this,'tab-found')">Found Reports</button>
     </div>
-    <div id="tab-lost"><div id="dash-lost-rows"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Enter your email above</div><div class="empty-text">to load your reports</div></div></div></div>
+    <div id="tab-lost"><div id="dash-lost-rows"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Loading your reports…</div></div></div></div>
     <div id="tab-found" style="display:none"><div id="dash-found-rows"></div></div>
   </div>
 </div>
@@ -349,6 +406,10 @@
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
+      <!-- Full-size photo shown in modal if available -->
+      <div id="modal-photo-row" style="display:none;margin-bottom:1.25rem">
+        <img id="modal-photo-img" alt="Item photo" style="width:100%;max-height:280px;object-fit:cover;border-radius:var(--radius);border:1px solid var(--border)">
+      </div>
       <div class="detail-grid">
         <div><div class="detail-label">Location</div><div class="detail-value" id="modal-location"></div></div>
         <div><div class="detail-label">Reported by</div><div class="detail-value" id="modal-reporter"></div></div>
@@ -375,10 +436,14 @@
       <button class="modal-close" onclick="closeClaimModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-note">Submitting as <strong id="claim-auth-email">—</strong></div>
       <div class="form-group">
         <label class="form-label">Unique identifying feature <span>*</span></label>
         <textarea class="form-input" rows="3" placeholder="e.g. There's a mountain sticker on the lid and my initials written inside…" id="claim-answer"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your university email</label>
+        <input class="form-input" type="email" id="claim-email" readonly style="background:var(--gray-100);color:var(--gray-500);cursor:not-allowed">
+        <div class="form-hint">Filled automatically from your login</div>
       </div>
     </div>
     <div class="modal-actions">
@@ -388,33 +453,10 @@
   </div>
 </div>
 
-<!-- LOGIN MODAL -->
-<div class="overlay" id="login-modal">
-  <div class="modal" style="max-width:420px">
-    <div class="modal-header">
-      <div style="flex:1">
-        <div class="modal-title">Login</div>
-        <div style="font-size:13px;color:var(--gray-500);margin-top:3px">Enter your email — we'll send a secure login link.</div>
-      </div>
-      <button class="modal-close" onclick="closeLoginModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Email address <span>*</span></label>
-        <input class="form-input" type="email" placeholder="your.name@university.edu" id="login-email">
-        <div class="form-hint" id="login-msg" style="display:none"></div>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-primary" id="login-submit-btn" onclick="sendLoginLink()">Send Login Link</button>
-      <button class="btn btn-secondary" onclick="closeLoginModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</div><!-- end #app -->
+
 <script src="script.js"></script>
 </body>
 </html>
